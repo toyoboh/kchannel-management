@@ -1,20 +1,28 @@
 import sys
 sys.path.append('../../../../')
 from common.common import patterns_replace
-import urllib.request
-from bs4 import BeautifulSoup
+from bs4           import BeautifulSoup
+from datetime      import datetime
+import pandas as pd
 import requests
+import urllib.request
 
 # 抽出対象URL
 url = 'https://www.pusannavi.com/special/5047301/index.html'
-
-# 料理名を格納する配列
-food_list = []
 
 # 対象URLにアクセスしデータを取得およびhtml解析
 res_data = requests.get(url)
 res_data.encoding = res_data.apparent_encoding # 文字化け対策
 soup = BeautifulSoup(res_data.text, 'html.parser')
+
+# 料理名を格納する配列
+# これをもとにCSVファイルを作成する
+food_list = []
+
+# 連想配列に使用する固定のデータ
+CATEGORY_ID  = 2 # 「韓国料理」のカテゴリーIDを指定する（必要があれば変更する）
+ACCOUNT_ID   = 1 # 管理者のID
+NOW_DATETIME = datetime.now().strftime('%Y-%m-%d %H:%M:%S') # 連想配列作成時に登録・更新日時に使用するための
 
 # 料理名が入っている全部の要素（タグ）取得
 food_elements = soup.find_all(class_='atc_r_ttl')
@@ -24,16 +32,22 @@ for element in food_elements:
     food_name = element.text
     clean_food_name = patterns_replace(food_name, [' ', '　', '\n'], '')
 
-    food_list.append(clean_food_name)
+    # CSVに出力するための配列
+    data = {
+        'category_id'       : CATEGORY_ID,
+        'board_id'          : None,
+        'board_name'        : clean_food_name,
+        'created_at'        : NOW_DATETIME,
+        'created_account_id': ACCOUNT_ID,
+        'updated_at'        : NOW_DATETIME,
+        'updated_account_id': ACCOUNT_ID,
+        'deleted_at'        : 'NULL',
+        'deleted_account_id': 'NULL'
+    }
 
-# ファイルに料理名を書き込む
-with open('../data/information.txt', 'w') as information_file:
-    food_list_num       = len(food_list)    # 配列要素数を取得
-    list_last_index_num = food_list_num - 1 # 配列の最後のインデックス番号を取得
+    # 配列に追加
+    food_list.append(data)
 
-    for i in range(food_list_num):
-        # 配列の最後の料理名以外は、改行文字を後ろにつける
-        if i == list_last_index_num:
-            information_file.write(food_list[i])
-        else:
-            information_file.write(food_list[i] + '\n')
+# CSV作成
+df = pd.DataFrame(food_list)
+df.to_csv('../data/information.csv', index = False)
