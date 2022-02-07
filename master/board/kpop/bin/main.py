@@ -9,7 +9,7 @@ res_data = requests.get(url)
 # html解析
 soup = BeautifulSoup(res_data.text, 'html.parser')
 
-# kpopのグループ名を格納する配列
+# kpopのグループ情報を管理する配列
 # これをもとにCSVファイルを作成する
 group_list = []
 
