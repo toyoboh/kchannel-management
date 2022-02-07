@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
+from datetime import datetime
 
 url = "https://ja.wikipedia.org/wiki/韓国のアイドルグループ一覧"
 res_data = requests.get(url)
@@ -8,7 +10,13 @@ res_data = requests.get(url)
 soup = BeautifulSoup(res_data.text, 'html.parser')
 
 # kpopのグループ名を格納する配列
+# これをもとにCSVファイルを作成する
 group_list = []
+
+# 連想配列に使用する固定のデータ
+CATEGORY_ID  = 3 # kpopのカテゴリーIDを指定する（必要があれば変更する）
+ACCOUNT_ID   = 1 # 管理者のID
+NOW_DATETIME = datetime.now().strftime('%Y-%m-%d %H:%M:%S') # 連想配列作成時に登録・更新日時に使用するための現在の日付データ
 
 # 年代別にグループがまとめられているので、全テーブルからグループ名を取得し、配列に格納する
 for table in soup.find_all(class_='wikitable'):
@@ -31,19 +39,36 @@ for table in soup.find_all(class_='wikitable'):
         # 改行文字の数がものによって異なるため、一度改行文字を削除する
         clean_group_name = group_name.replace('\n', '')
 
-        # グループ名を配列に格納
-        group_list.append(clean_group_name)
+        # CSVに出力するための配列
+        data = {
+            'category_id'       : CATEGORY_ID,
+            'board_id'          : None,
+            'board_name'        : clean_group_name,
+            'created_at'        : NOW_DATETIME,
+            'created_account_id': 1,
+            'updated_at'        : NOW_DATETIME,
+            'updated_account_id': 1,
+            'deleted_at'        : 'NULL',
+            'deleted_account_id': 'NULL'
+        }
 
-# kpopグループの名前を抽出し、ファイルに書き込む
-# for構文が1つ増えるため速度は多少遅くなるが、コードの見やすさを優先するためこの書き方とする
-with open("../data/information.txt", "w") as information_file:
-    # グループの要素数と配列の最後のインデックス番号を取得
-    group_list_num = len(group_list)
-    last_index_num = group_list_num - 1 # 配列が最後か判定するために使用
+        # 配列に格納
+        group_list.append(data)
 
-    for j in range(group_list_num):
-        # 配列の最後のみ改行文字を付け加えない
-        if j == last_index_num:
-            information_file.write(group_list[j])
-        else:
-            information_file.write(group_list[j] + '\n')
+# CSVファイルの作成
+df = pd.DataFrame(group_list)
+df.to_csv('../data/information.csv', index = False)
+
+# # kpopグループの名前を抽出し、ファイルに書き込む
+# # for構文が1つ増えるため速度は多少遅くなるが、コードの見やすさを優先するためこの書き方とする
+# with open("../data/information.txt", "w") as information_file:
+#     # グループの要素数と配列の最後のインデックス番号を取得
+#     group_list_num = len(group_list)
+#     last_index_num = group_list_num - 1 # 配列が最後か判定するために使用
+
+#     for j in range(group_list_num):
+#         # 配列の最後のみ改行文字を付け加えない
+#         if j == last_index_num:
+#             information_file.write(group_list[j])
+#         else:
+#             information_file.write(group_list[j] + '\n')
