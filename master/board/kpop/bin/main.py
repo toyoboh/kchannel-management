@@ -16,7 +16,7 @@ group_list = []
 # 連想配列に使用する固定のデータ
 CATEGORY_ID  = 3 # kpopのカテゴリーIDを指定する（必要があれば変更する）
 ACCOUNT_ID   = 1 # 管理者のID
-NOW_DATETIME = datetime.now().strftime('%Y-%m-%d %H:%M:%S') # 連想配列作成時に登録・更新日時に使用するための現在の日付データ
+NOW_DATETIME = datetime.now().strftime('%Y-%m-%d %H:%M:%S') # 連想配列作成時に登録・更新日時に使用するための
 
 # 年代別にグループがまとめられているので、全テーブルからグループ名を取得し、配列に格納する
 for table in soup.find_all(class_='wikitable'):
