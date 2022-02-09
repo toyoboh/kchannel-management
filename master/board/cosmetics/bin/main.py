@@ -19,7 +19,7 @@ cosme_rows_num = len(cosme_rows)            # テーブルの行数を取得
 loop_num       = cosme_rows_num - 3         # 行末3行は取得対象外なのでその数を引く
 
 # CSVに出力するための定数定義
-CATEGORY_ID  = 5 # 対象のカテゴリーID
+CATEGORY_ID  = 3 # 対象のカテゴリーID
 ACCOUNT_ID   = 1 # 管理者ID
 NOW_DATETIME = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 

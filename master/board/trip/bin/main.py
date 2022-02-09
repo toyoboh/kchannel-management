@@ -11,7 +11,7 @@ res_data.encoding = res_data.apparent_encoding # 文字化け対策
 soup              = BeautifulSoup(res_data.text, 'html.parser')
 
 # CSVに出力するための定数定義
-CATEGORY_ID  = 6 # 対象のカテゴリーID
+CATEGORY_ID  = 5 # 対象のカテゴリーID
 ACCOUNT_ID   = 1 # 管理者ID
 NOW_DATETIME = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 

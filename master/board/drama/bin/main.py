@@ -21,7 +21,7 @@ for end_word in end_words:
     soup     = BeautifulSoup(res_data.text, 'html.parser')
 
     # 連想配列に使用する固定のデータ
-    CATEGORY_ID  = 4 # ドラマのカテゴリーIDを指定する（必要があれば変更する）
+    CATEGORY_ID  = 2 # ドラマのカテゴリーIDを指定する（必要があれば変更する）
     ACCOUNT_ID   = 1 # 管理者のID
     NOW_DATETIME = datetime.now().strftime('%Y-%m-%d %H:%M:%S') # 連想配列作成時に登録・更新日時に使用するための
 

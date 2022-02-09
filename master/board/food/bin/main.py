@@ -20,7 +20,7 @@ soup = BeautifulSoup(res_data.text, 'html.parser')
 food_list = []
 
 # 連想配列に使用する固定のデータ
-CATEGORY_ID  = 2 # 「韓国料理」のカテゴリーIDを指定する（必要があれば変更する）
+CATEGORY_ID  = 4 # 「韓国料理」のカテゴリーIDを指定する（必要があれば変更する）
 ACCOUNT_ID   = 1 # 管理者のID
 NOW_DATETIME = datetime.now().strftime('%Y-%m-%d %H:%M:%S') # 連想配列作成時に登録・更新日時に使用するための
 
